@@ -1,4 +1,4 @@
-package com.example.letssopt
+package com.example.letssopt.week1
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,14 +9,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -40,11 +38,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.letssopt.MainActivity
+import com.example.letssopt.R
 import com.example.letssopt.ui.theme.LETSSOPTTheme
+import com.example.letssopt.week1.components.SignTitle
+import com.example.letssopt.week1.components.WatchaLogo
 
 class LoginActivity : ComponentActivity() {
 
@@ -69,7 +71,7 @@ class LoginActivity : ComponentActivity() {
         setContent {
             LETSSOPTTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting2(
+                    LoginScreen(
                         // 런처와 저장된 데이터를 Composable에 전달
                         registeredEmail = registeredEmail,
                         registeredPw = registeredPw,
@@ -77,6 +79,18 @@ class LoginActivity : ComponentActivity() {
                             // SignUpActivity로 이동하기 위해 런처를 실행
                             val intent = Intent(this, SignUpActivity::class.java)
                             signUpLauncher.launch(intent)
+                        },
+                        onLoginClick = { email, password ->
+                            // 로그인 성공 조건 확인
+                            if (email == registeredEmail && password == registeredPw && email.isNotEmpty()) {
+                                Toast.makeText(this, "✅ 로그인 성공!", Toast.LENGTH_SHORT).show()
+
+                                // 메인 화면으로 이동
+                                startActivity(Intent(this, MainActivity::class.java))
+                            } else {
+                                Toast.makeText(this, "❌ 이메일 또는 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         },
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -87,88 +101,43 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting2(
-
-    // SignUpActivity에서 받아온 데이터
-    registeredEmail: String,
-    registeredPw: String,
-    onSignUpClick: () -> Unit,
+fun SignTextField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     modifier: Modifier = Modifier
 ) {
-    var inputEmail by remember { mutableStateOf("") }
-    var inputPw by remember { mutableStateOf("")}
-
-    // 로그인 버튼 활성화 조건
-    val isLoginEnabled = inputEmail.isNotEmpty() && inputPw.isNotEmpty()
-
-    // SignUpActivity에서 받아온 데이터를 입력창에 자동으로 적용
-    LaunchedEffect(registeredEmail) {
-        if (registeredEmail.isNotEmpty()) inputEmail = registeredEmail
-        if (registeredPw.isNotEmpty()) inputPw = registeredPw
-    }
-
-    val context = LocalContext.current
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .padding(horizontal = 20.dp),
-        horizontalAlignment = Alignment . CenterHorizontally,
-    ) {
-
-        Spacer(modifier = Modifier.height(60.dp))
-
+    Column(modifier = modifier) {
         Text(
-            text = "watcha",
-            fontSize = 36.sp,
-            color = Color(0xFFE8003C),
-            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
-            fontWeight = FontWeight.Bold,
-        )
-
-        Spacer(modifier = Modifier.height(26.dp))
-
-        Text(
-            text = "이메일로 로그인",
-            fontSize = 20.sp,
-            color = Color.White,
-            fontFamily = FontFamily(Font(R.font.pretendard_bold)),
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .align(Alignment.Start)
-        )
-
-        Spacer(modifier = Modifier.height(36.dp))
-
-        Text(
-            text = "이메일",
+            text = label,
             fontSize = 14.sp,
             color = Color(0xFF999999),
             fontFamily = FontFamily(Font(R.font.pretendard_regular)),
             fontWeight = FontWeight.Normal,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(bottom = 3.dp)
+            modifier = Modifier.padding(bottom = 3.dp)
         )
 
         TextField(
             modifier = Modifier
                 .padding(bottom = 18.dp)
                 .fillMaxWidth(),
-            value = inputEmail,
-            onValueChange = { inputEmail = it },
+            value = value,
+            onValueChange = onValueChange,
             shape = RoundedCornerShape(size = 8.dp),
+            visualTransformation = visualTransformation,
             placeholder = {
                 Text(
-                    text = "이메일 주소를 입력하세요",
+                    text = placeholder,
                     color = Color(0xFF666666),
                     fontFamily = FontFamily(Font(R.font.pretendard_regular)),
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
                 )
             },
-            colors =TextFieldDefaults.colors(
+            colors = TextFieldDefaults.colors(
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
                 unfocusedContainerColor = Color(0xFF2A2A2A),
@@ -176,46 +145,68 @@ fun Greeting2(
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent
             ),
-            // 키보드 타입 이메일 전용으로 변경
+            keyboardOptions = keyboardOptions
+        )
+    }
+}
+
+@Composable
+fun LoginScreen(
+
+    // SignUpActivity에서 받아온 데이터
+    registeredEmail: String,
+    registeredPw: String,
+    onSignUpClick: () -> Unit,
+    onLoginClick: (String, String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var inputEmail by remember { mutableStateOf("") }
+    var inputPassword by remember { mutableStateOf("") }
+
+    // 로그인 버튼 활성화 조건
+    val isLoginEnabled = inputEmail.isNotEmpty() && inputPassword.isNotEmpty()
+
+    // SignUpActivity에서 받아온 데이터를 입력창에 자동으로 적용
+    LaunchedEffect(registeredEmail) {
+        if (registeredEmail.isNotEmpty()) inputEmail = registeredEmail
+        if (registeredPw.isNotEmpty()) inputPassword = registeredPw
+    }
+
+    val context = LocalContext.current
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFF141414))
+            .padding(horizontal = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+
+        Spacer(modifier = Modifier.height(60.dp))
+
+        WatchaLogo()
+
+        Spacer(modifier = Modifier.height(26.dp))
+
+        SignTitle(text = "이메일로 로그인", modifier = Modifier.align(Alignment.Start))
+
+        Spacer(modifier = Modifier.height(36.dp))
+
+        SignTextField(
+            label = "이메일",
+            value = inputEmail,
+            onValueChange = { inputEmail = it },
+            placeholder = "이메일 주소를 입력하세요",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
         )
 
-        Text(
-            text = "비밀번호",
-            fontSize = 14.sp,
-            color = Color(0xFF999999),
-            fontFamily = FontFamily(Font(R.font.pretendard_regular)),
-            fontWeight = FontWeight.Normal,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(bottom = 3.dp)
-        )
-        TextField(
-            modifier = Modifier
-                .padding(bottom = 18.dp)
-                .fillMaxWidth(),
-            value = inputPw,
-            onValueChange = { inputPw = it },
-            shape = RoundedCornerShape(size = 8.dp),
-            visualTransformation = PasswordVisualTransformation(), // 마스킹 처리
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), // 키보드를 비밀번호 입력 모드(영문 위주, 자동완성 끄기)로 설정
-            placeholder = {
-                Text(
-                    text = "비밀번호를 입력하세요",
-                    color = Color(0xFF666666),
-                    fontFamily = FontFamily(Font(R.font.pretendard_regular)),
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp,
-                )
-            },
-            colors =TextFieldDefaults.colors(
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                unfocusedContainerColor = Color(0xFF2A2A2A),
-                focusedContainerColor = Color(0xFF2A2A2A),
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent
-            )
+        SignTextField(
+            label = "비밀번호",
+            value = inputPassword,
+            onValueChange = { inputPassword = it },
+            placeholder = "비밀번호를 입력하세요",
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -225,7 +216,7 @@ fun Greeting2(
             color = Color(0xFF999999),
             fontSize = 14.sp,
             modifier = Modifier
-                .clickable{
+                .clickable {
                     // 회원가입 문구 클릭 시 런처 실행
                     onSignUpClick()
                 }
@@ -235,16 +226,7 @@ fun Greeting2(
 
         Button(
             onClick = {
-                // 로그인 성공 조건 확인
-                if (inputEmail == registeredEmail && inputPw == registeredPw && inputEmail.isNotEmpty()) {
-                    Toast.makeText(context, "✅ 로그인 성공!", Toast.LENGTH_SHORT).show()
-
-                    // 메인 화면으로 이동
-                    val intent = Intent(context, MainActivity::class.java)
-                    context.startActivity(intent)
-                } else {
-                    Toast.makeText(context, "❌ 이메일 또는 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show()
-                }
+                onLoginClick(inputEmail, inputPassword)
             },
             modifier = Modifier
                 .padding(bottom = 26.dp)
@@ -258,7 +240,8 @@ fun Greeting2(
                 containerColor = Color(0xFFE8003C),
                 contentColor = Color.White,
                 disabledContainerColor = Color(0xFF333333),
-                disabledContentColor = Color(0xFF666666)),
+                disabledContentColor = Color(0xFF666666)
+            ),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
@@ -274,13 +257,14 @@ fun Greeting2(
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview2() {
+private fun LoginScreenPreview() {
     LETSSOPTTheme {
         // 임시 데이터 넣어주기
-        Greeting2(
+        LoginScreen(
             "sopt@sopt.org",
             "12345678",
             {},
+            { _, _ -> }
         )
     }
 }
