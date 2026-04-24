@@ -22,6 +22,10 @@ class HomeViewModel : ViewModel() {
             R.drawable.img_content1,
             R.drawable.img_content2,
             R.drawable.img_content3
+        ) + listOf(
+            R.drawable.img_content1,
+            R.drawable.img_content2,
+            R.drawable.img_content3
         )
     )
     val contentImages: StateFlow<List<Int>> = _contentImages
