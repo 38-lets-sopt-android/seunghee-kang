@@ -61,7 +61,7 @@ fun SignTextField(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        // 입력창 위 제목 (이메일, 비밀번호 등)
+        // 제목
         Text(
             text = label,
             fontSize = 14.sp,

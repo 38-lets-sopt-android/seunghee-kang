@@ -49,7 +49,7 @@ fun SignUpScreen(
         SignTitle(text = "회원가입", modifier = Modifier.align(Alignment.Start))
         Spacer(modifier = Modifier.height(36.dp))
 
-        // 💡 뷰모델 함수를 호출하여 값 변경 반영
+        // 뷰모델 함수를 호출하여 값 변경 반영
         SignTextField(
             label = "이메일",
             value = viewModel.email,

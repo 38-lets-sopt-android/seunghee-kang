@@ -19,10 +19,9 @@ import com.example.letssopt.week2.home.HomeScreen
 
 @Composable
 fun MainScreen(
-    // 💡 1. MainViewModel 주입
     mainViewModel: MainViewModel = viewModel()
 ) {
-    // 💡 2. 뷰모델의 상태(selectedTab)를 관찰하여 UI 업데이트
+    // 뷰모델의 상태(selectedTab)를 관찰하여 UI 업데이트
     val selectedTab by mainViewModel.selectedTab.collectAsState()
 
     val tabs = listOf(
@@ -45,7 +44,7 @@ fun MainScreen(
 
                     NavigationBarItem(
                         selected = isSelected,
-                        // 💡 3. 클릭 시 뷰모델의 함수를 호출하여 상태 변경
+                        // 클릭 시 뷰모델의 함수를 호출하여 상태 변경
                         onClick = { mainViewModel.updateTab(title) },
                         label = {
                             Text(
@@ -81,7 +80,7 @@ fun MainScreen(
                 .fillMaxSize()
                 .background(Color(0xFF141414))
         ) {
-            // 💡 4. 뷰모델의 상태값에 따라 화면 분기
+            // 뷰모델의 상태값에 따라 화면 분기
             when (selectedTab) {
                 "메인" -> HomeScreen()
                 else -> Text(
