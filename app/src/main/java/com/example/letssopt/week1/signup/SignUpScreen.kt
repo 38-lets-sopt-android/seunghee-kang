@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
 import com.example.letssopt.ui.theme.LETSSOPTTheme
@@ -35,6 +37,11 @@ fun SignUpScreen(
     onSignUpSuccess: (String, String) -> Unit
 ) {
     val context = LocalContext.current
+
+    // StateFlow 설정
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val password by viewModel.password.collectAsStateWithLifecycle()
+    val passwordConfirm by viewModel.passwordConfirm.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -52,7 +59,7 @@ fun SignUpScreen(
         // 뷰모델 함수를 호출하여 값 변경 반영
         SignTextField(
             label = "이메일",
-            value = viewModel.email,
+            value = email, // 변경
             onValueChange = { viewModel.onEmailChanged(it) },
             placeholder = "이메일 주소를 입력하세요",
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
@@ -60,7 +67,7 @@ fun SignUpScreen(
 
         SignTextField(
             label = "비밀번호",
-            value = viewModel.password,
+            value = password, // 변경
             onValueChange = { viewModel.onPasswordChanged(it) },
             placeholder = "비밀번호를 입력하세요",
             visualTransformation = PasswordVisualTransformation(),
@@ -69,7 +76,7 @@ fun SignUpScreen(
 
         SignTextField(
             label = "비밀번호 확인",
-            value = viewModel.passwordConfirm,
+            value = passwordConfirm, // 변경
             onValueChange = { viewModel.onPasswordConfirmChanged(it) },
             placeholder = "비밀번호를 다시 입력하세요",
             visualTransformation = PasswordVisualTransformation(),
@@ -101,7 +108,7 @@ fun SignUpScreen(
 
                     else -> {
                         Toast.makeText(context, "✅ 회원가입 성공!", Toast.LENGTH_SHORT).show()
-                        onSignUpSuccess(viewModel.email, viewModel.password)
+                        onSignUpSuccess(email, password) // 변경
                     }
                 }
             },

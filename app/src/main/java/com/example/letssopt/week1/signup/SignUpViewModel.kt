@@ -1,39 +1,45 @@
 package com.example.letssopt.week1.signup
 
 import android.util.Patterns
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class SignUpViewModel : ViewModel() {
-    var email by mutableStateOf("")
-    var password by mutableStateOf("")
-    var passwordConfirm by mutableStateOf("")
+    // 1. 상태를 StateFlow로 변경
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email.asStateFlow()
 
-    // [회원가입 성공조건 체크]
-    val isEmailValid: Boolean
-        get() = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    private val _password = MutableStateFlow("")
+    val password: StateFlow<String> = _password.asStateFlow()
 
-    val isPasswordValid: Boolean
-        get() = password.length in 8..12
+    private val _passwordConfirm = MutableStateFlow("")
+    val passwordConfirm: StateFlow<String> = _passwordConfirm.asStateFlow()
 
-    val isPasswordMatching: Boolean
-        get() = password == passwordConfirm && password.isNotEmpty()
-
-    val isAllFieldsFilled: Boolean
-        get() = email.isNotEmpty() && password.isNotEmpty() && passwordConfirm.isNotEmpty()
-
-    // 값 변경 함수들
+    // 2. 값 변경 함수 수정 (.value 사용)
     fun onEmailChanged(newEmail: String) {
-        email = newEmail
+        _email.value = newEmail
     }
 
     fun onPasswordChanged(newPassword: String) {
-        password = newPassword
+        _password.value = newPassword
     }
 
     fun onPasswordConfirmChanged(newPasswordConfirm: String) {
-        passwordConfirm = newPasswordConfirm
+        _passwordConfirm.value = newPasswordConfirm
     }
+
+    // 3. 기존 검증 로직은 동일 (StateFlow의 현재 값을 참조)
+    val isEmailValid: Boolean
+        get() = Patterns.EMAIL_ADDRESS.matcher(_email.value).matches()
+
+    val isPasswordValid: Boolean
+        get() = _password.value.length in 8..12
+
+    val isPasswordMatching: Boolean
+        get() = _password.value == _passwordConfirm.value && _password.value.isNotEmpty()
+
+    val isAllFieldsFilled: Boolean
+        get() = _email.value.isNotEmpty() && _password.value.isNotEmpty() && _passwordConfirm.value.isNotEmpty()
 }
