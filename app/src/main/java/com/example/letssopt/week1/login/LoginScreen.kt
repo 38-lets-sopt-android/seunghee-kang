@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
 import com.example.letssopt.week1.component.SignTextField
@@ -38,8 +39,8 @@ fun LoginScreen(
     loginViewModel: LoginViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    val inputEmail by loginViewModel.email.collectAsState()
-    val inputPassword by loginViewModel.password.collectAsState()
+    val inputEmail by loginViewModel.email.collectAsStateWithLifecycle()
+    val inputPassword by loginViewModel.password.collectAsStateWithLifecycle()
 
     // 회원가입에서 넘어온 데이터 자동 입력
     LaunchedEffect(registeredEmail) {
