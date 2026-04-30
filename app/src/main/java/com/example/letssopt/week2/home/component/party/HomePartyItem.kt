@@ -18,10 +18,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.letssopt.R
-import com.example.letssopt.week2.home.PartyModel
+import com.example.letssopt.week2.home.model.PartyModel
 
 @Composable
 fun HomePartyItem(party: PartyModel) { // PartyModel 객체를 통째로 받음
@@ -97,4 +98,12 @@ fun HomePartyItem(party: PartyModel) { // PartyModel 객체를 통째로 받음
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomePartyItemPreview() {
+    HomePartyItem(
+        party = PartyModel("오늘 21:13", "# 왕과 사는 남자", R.drawable.img_party1)
+    )
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.letssopt.R
@@ -63,5 +64,24 @@ fun HomeSection(
                 )
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeSectionPreview() {
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+
+        HomeSection(title = "공개 예정 콘텐츠")
+
+        HomeSection(
+            title = "방금 막 도착한 신상",
+            subtitle = "예능부터 드라마까지!"
+        )
+
+        HomeSection(
+            title = "왓챠 파티",
+            showMore = false
+        )
     }
 }

@@ -6,8 +6,11 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import com.example.letssopt.R
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun HomeBannerSection(
@@ -29,4 +32,16 @@ fun HomeBannerSection(
     ) { page ->
         HomeBannerItem(imageRes = bannerImages[page])
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeBannerSectionPreview() {
+    HomeBannerSection(
+        bannerImages = persistentListOf(
+            R.drawable.img_banner1,
+            R.drawable.img_banner2,
+            R.drawable.img_banner3
+        )
+    )
 }

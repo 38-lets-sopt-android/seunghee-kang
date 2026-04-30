@@ -11,6 +11,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,19 +25,31 @@ fun MainScreen(
 ) {
     val selectedTab by mainViewModel.selectedTab.collectAsStateWithLifecycle()
 
+    MainContent(
+        selectedTab = selectedTab,
+        onTabSelected = { mainViewModel.updateTab(it) }
+    )
+}
+
+@Composable
+private fun MainContent(
+    selectedTab: MainTab,
+    onTabSelected: (MainTab) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Scaffold(
+        modifier = modifier,
         bottomBar = {
             NavigationBar(
                 containerColor = Color(0xFF141414),
                 tonalElevation = 0.dp
             ) {
-                // MainTab.entries를 사용하여 루프를 돕니다.
                 MainTab.entries.forEach { tab ->
-                    val isSelected = selectedTab == tab
+                    val isSelected = (selectedTab == tab)
 
                     NavigationBarItem(
                         selected = isSelected,
-                        onClick = { mainViewModel.updateTab(tab) },
+                        onClick = { onTabSelected(tab) },
                         label = {
                             Text(
                                 text = tab.label,
@@ -81,4 +94,13 @@ fun MainScreen(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    MainContent(
+        selectedTab = MainTab.HOME,
+        onTabSelected = {}
+    )
 }

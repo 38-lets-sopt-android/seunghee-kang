@@ -6,8 +6,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.collections.immutable.ImmutableList
+import com.example.letssopt.R
 
 @Composable
 fun HomeContentSection(
@@ -28,4 +30,18 @@ fun HomeContentSection(
             HomeContentItem(imageRes = imageRes)
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeContentSectionPreview() {
+    HomeContentSection(
+        contents = kotlinx.collections.immutable.persistentListOf(
+            R.drawable.img_content1,
+            R.drawable.img_content2,
+            R.drawable.img_content3,
+            R.drawable.img_content1,
+            R.drawable.img_content2
+        )
+    )
 }

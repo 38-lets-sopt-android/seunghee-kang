@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -26,14 +27,27 @@ import com.example.letssopt.week2.home.component.HomeTopBar
 import com.example.letssopt.week2.home.component.banner.HomeBannerSection
 import com.example.letssopt.week2.home.component.content.HomeContentSection
 import com.example.letssopt.week2.home.component.party.HomePartySection
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    // ViewModel의 상태를 구독하여 UI 전용 컴포저블에 전달
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
+    HomeContent(
+        uiState = uiState,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun HomeContent(
+    uiState: HomeUiState,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -50,7 +64,6 @@ fun HomeScreen(
                     showMore = false
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                // uiState에서 꺼내서 전달
                 HomeBannerSection(bannerImages = uiState.bannerImages)
             }
         }
@@ -93,7 +106,6 @@ fun HomeScreen(
                         )
                     )
                 }
-                // 타입 불일치 해결!
                 HomeContentSection(contents = uiState.contentImages)
             }
         }
@@ -116,4 +128,15 @@ fun HomeScreen(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    HomeContent(
+        uiState = HomeUiState(
+            bannerImages = persistentListOf(R.drawable.img_banner1, R.drawable.img_banner2),
+            contentImages = persistentListOf(R.drawable.img_content1, R.drawable.img_content2)
+        )
+    )
 }
