@@ -12,11 +12,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeContentItem(imageRes: Int) {
+fun HomeContentItem(
+    imageRes: Int,
+    // Modifier 매개변수 추가
+    modifier: Modifier = Modifier
+) {
     Image(
         painter = painterResource(id = imageRes),
         contentDescription = "콘텐츠 포스터",
-        modifier = Modifier
+        modifier = modifier
             .width(100.dp)
             .height(150.dp)
             .clip(RoundedCornerShape(10.dp)),
