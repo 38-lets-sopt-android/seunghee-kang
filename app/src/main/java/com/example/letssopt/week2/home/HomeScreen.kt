@@ -4,10 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +18,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
 import com.example.letssopt.week2.home.component.HomeSection
@@ -30,25 +29,29 @@ import com.example.letssopt.week2.home.component.party.HomePartySection
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: HomeViewModel = viewModel(),
+    modifier: Modifier = Modifier
 ) {
-    val bannerImages by homeViewModel.bannerImages.collectAsState()
-    val contentImages by homeViewModel.contentImages.collectAsState()
-    val partyList by homeViewModel.partyList.collectAsState()
+    val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF141414))
     ) {
         item { HomeTopBar() }
 
-        // 배너
+        // 배너 섹션
         item {
             Column(modifier = Modifier.padding(top = 24.dp)) {
-                HomeSection(title = "방금 막 도착한 신상 컨텐츠", subtitle = "예능부터 드라마까지!", showMore = false)
+                HomeSection(
+                    title = "방금 막 도착한 신상 컨텐츠",
+                    subtitle = "예능부터 드라마까지!",
+                    showMore = false
+                )
                 Spacer(modifier = Modifier.height(24.dp))
-                HomeBannerSection(bannerImages = bannerImages)
+                // uiState에서 꺼내서 전달
+                HomeBannerSection(bannerImages = uiState.bannerImages)
             }
         }
 
@@ -90,7 +93,8 @@ fun HomeScreen(
                         )
                     )
                 }
-                HomeContentSection(contents = contentImages)
+                // 타입 불일치 해결!
+                HomeContentSection(contents = uiState.contentImages)
             }
         }
 
@@ -99,7 +103,7 @@ fun HomeScreen(
             Column(modifier = Modifier.padding(top = 26.dp)) {
                 HomeSection(title = "공개 예정 콘텐츠")
                 Spacer(modifier = Modifier.height(8.dp))
-                HomeContentSection(contents = contentImages)
+                HomeContentSection(contents = uiState.contentImages)
             }
         }
 
@@ -108,9 +112,8 @@ fun HomeScreen(
             Column(modifier = Modifier.padding(top = 26.dp)) {
                 HomeSection(title = "왓챠 파티")
                 Spacer(modifier = Modifier.height(8.dp))
-                HomePartySection(parties = partyList)
+                HomePartySection(parties = uiState.partyList)
             }
         }
     }
 }
-
