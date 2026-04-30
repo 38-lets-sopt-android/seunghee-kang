@@ -32,9 +32,14 @@ import com.example.letssopt.week1.component.WatchaLogo
 
 @Composable
 fun SignUpScreen(
+    // 1. 필수 파라미터
+    onSignUpSuccess: (String, String) -> Unit,
+
+    // 2. Modifier
     modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = viewModel(),
-    onSignUpSuccess: (String, String) -> Unit
+
+    // 3. 선택적 파라미터
+    viewModel: SignUpViewModel = viewModel()
 ) {
     val context = LocalContext.current
 
