@@ -32,12 +32,17 @@ import com.example.letssopt.week1.login.LoginViewModel
 
 @Composable
 fun LoginScreen(
+    // 1. 필수 파라미터
     registeredEmail: String,
     registeredPw: String,
     onSignUpClick: () -> Unit,
     onLoginClick: (String, String) -> Unit,
+
+    // 2. Modifier
+    modifier: Modifier = Modifier,
+
+    // 3. 선택적 파라미터
     loginViewModel: LoginViewModel = viewModel(),
-    modifier: Modifier = Modifier
 ) {
     val inputEmail by loginViewModel.email.collectAsStateWithLifecycle()
     val inputPassword by loginViewModel.password.collectAsStateWithLifecycle()
