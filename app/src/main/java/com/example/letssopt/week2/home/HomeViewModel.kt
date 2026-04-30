@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import com.example.letssopt.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.ImmutableList
 
 class HomeViewModel : ViewModel() {
     // 상단 배너용 이미지
@@ -35,9 +37,9 @@ class HomeViewModel : ViewModel() {
         listOf(
             PartyModel("오늘 21:13", "# 왕과 사는 남자", R.drawable.img_party1),
             PartyModel("내일 22:22", "# 파묘", R.drawable.img_party2)
-        )
+        ).toPersistentList() // Immutable 형태로 변환
     )
-    val partyList: StateFlow<List<PartyModel>> = _partyList
+    val partyList: StateFlow<ImmutableList<PartyModel>> = _partyList
 }
 
 data class PartyModel(

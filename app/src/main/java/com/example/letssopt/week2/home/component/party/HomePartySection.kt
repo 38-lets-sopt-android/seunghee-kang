@@ -7,20 +7,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.letssopt.week2.home.PartyModel
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun HomePartySection(parties: List<PartyModel>) {
-    Column {
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(parties) { party ->
-                HomePartyItem(party = party)
-            }
+fun HomePartySection(
+    // List 대신 ImmutableList 사용
+    parties: ImmutableList<PartyModel>,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(
+            items = parties,
+            key = { party -> party.title }
+        ) { party ->
+            HomePartyItem(party = party)
         }
     }
 }
