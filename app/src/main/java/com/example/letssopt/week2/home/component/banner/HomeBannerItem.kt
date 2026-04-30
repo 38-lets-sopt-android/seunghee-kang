@@ -11,9 +11,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeBannerItem(imageRes: Int) {
+fun HomeBannerItem(
+    imageRes: Int,
+    // Modifier 매개변수 추가
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .aspectRatio(16f / 9f)
             .clip(RoundedCornerShape(10.dp))
