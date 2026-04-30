@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
 import com.example.letssopt.week2.home.component.HomeSection
+import com.example.letssopt.week2.home.component.HomeTopBar
 import com.example.letssopt.week2.home.component.banner.HomeBannerSection
 import com.example.letssopt.week2.home.component.content.HomeContentSection
 import com.example.letssopt.week2.home.component.party.HomePartySection
@@ -113,35 +114,3 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun HomeTopBar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_watch),
-            contentDescription = null,
-            tint = Color.White,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(14.dp))
-        Icon(
-            painter = painterResource(id = R.drawable.ic_noti_white),
-            contentDescription = null,
-            tint = Color.White,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(14.dp))
-        Icon(
-            painter = painterResource(id = R.drawable.ic_profile),
-            contentDescription = null,
-            tint = Color.White,
-            modifier = Modifier.size(24.dp)
-        )
-    }
-}
