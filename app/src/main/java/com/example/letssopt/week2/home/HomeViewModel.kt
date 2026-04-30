@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.ImmutableList
+import com.example.letssopt.week2.home.model.PartyModel
 
 class HomeViewModel : ViewModel() {
     // 상단 배너용 이미지
@@ -41,9 +42,3 @@ class HomeViewModel : ViewModel() {
     )
     val partyList: StateFlow<ImmutableList<PartyModel>> = _partyList
 }
-
-data class PartyModel(
-    val time: String,
-    val title: String,
-    val image: Int
-)
