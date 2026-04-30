@@ -3,14 +3,14 @@ package com.example.letssopt.week2.main
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel : ViewModel() {
-    // 하단 탭 선택 상태 관리
-    private val _selectedTab = MutableStateFlow("메인")
-    val selectedTab: StateFlow<String> = _selectedTab
+    // String 대신 MainTab 타입을 사용합니다.
+    private val _selectedTab = MutableStateFlow(MainTab.HOME)
+    val selectedTab: StateFlow<MainTab> = _selectedTab.asStateFlow()
 
-    // 탭 클릭 시 호출할 함수
-    fun updateTab(newTab: String) {
-        _selectedTab.value = newTab
+    fun updateTab(tab: MainTab) {
+        _selectedTab.value = tab
     }
 }

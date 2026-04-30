@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
 import com.example.letssopt.week2.home.HomeScreen
@@ -21,34 +22,24 @@ import com.example.letssopt.week2.home.HomeScreen
 fun MainScreen(
     mainViewModel: MainViewModel = viewModel()
 ) {
-    // 뷰모델의 상태(selectedTab)를 관찰하여 UI 업데이트
-    val selectedTab by mainViewModel.selectedTab.collectAsState()
-
-    val tabs = listOf(
-        "메인" to R.drawable.ic_main,
-        "개별 구매" to R.drawable.ic_category,
-        "웹툰" to R.drawable.ic_wallet,
-        "찾기" to R.drawable.ic_search,
-        "보관함" to R.drawable.ic_folder
-    )
+    val selectedTab by mainViewModel.selectedTab.collectAsStateWithLifecycle()
 
     Scaffold(
         bottomBar = {
-            // 하단 내비게이션 바 구현
             NavigationBar(
                 containerColor = Color(0xFF141414),
                 tonalElevation = 0.dp
             ) {
-                tabs.forEach { (title, iconRes) ->
-                    val isSelected = selectedTab == title
+                // MainTab.entries를 사용하여 루프를 돕니다.
+                MainTab.entries.forEach { tab ->
+                    val isSelected = selectedTab == tab
 
                     NavigationBarItem(
                         selected = isSelected,
-                        // 클릭 시 뷰모델의 함수를 호출하여 상태 변경
-                        onClick = { mainViewModel.updateTab(title) },
+                        onClick = { mainViewModel.updateTab(tab) },
                         label = {
                             Text(
-                                text = title,
+                                text = tab.label,
                                 style = TextStyle(
                                     fontSize = 12.sp,
                                     fontFamily = FontFamily(Font(R.font.pretendard_regular))
@@ -57,8 +48,8 @@ fun MainScreen(
                         },
                         icon = {
                             Icon(
-                                painter = painterResource(id = iconRes),
-                                contentDescription = title,
+                                painter = painterResource(id = tab.iconRes),
+                                contentDescription = tab.label,
                                 modifier = Modifier.size(24.dp)
                             )
                         },
@@ -80,11 +71,10 @@ fun MainScreen(
                 .fillMaxSize()
                 .background(Color(0xFF141414))
         ) {
-            // 뷰모델의 상태값에 따라 화면 분기
             when (selectedTab) {
-                "메인" -> HomeScreen()
+                MainTab.HOME -> HomeScreen()
                 else -> Text(
-                    text = selectedTab,
+                    text = selectedTab.label,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
