@@ -34,7 +34,6 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    // ViewModel의 상태를 구독하여 UI 전용 컴포저블에 전달
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     HomeContent(

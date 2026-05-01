@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
+import com.example.letssopt.feature.library.LibraryScreen
+import com.example.letssopt.feature.catagory.CategoryScreen
 import com.example.letssopt.feature.home.HomeScreen
 
 @Composable
@@ -86,6 +88,8 @@ private fun MainContent(
         ) {
             when (selectedTab) {
                 MainTab.HOME -> HomeScreen()
+                MainTab.CATEGORY -> CategoryScreen() // 개별 구매 화면 연결
+                MainTab.LIBRARY -> LibraryScreen()     // 보관함 화면 연결
                 else -> Text(
                     text = selectedTab.label,
                     color = Color.White,

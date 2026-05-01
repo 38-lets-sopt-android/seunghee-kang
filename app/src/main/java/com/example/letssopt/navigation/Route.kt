@@ -8,4 +8,6 @@ sealed class Route(val route: String) {
 
     // 메인(홈) 화면
     data object Main : Route("main")
+
+    data object Library : Route("library")
 }

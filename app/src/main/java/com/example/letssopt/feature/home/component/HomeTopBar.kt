@@ -16,7 +16,7 @@ fun HomeTopBar(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier // 최상위 레이아웃에 연결
+        modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
             .padding(horizontal = 20.dp),
