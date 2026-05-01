@@ -11,16 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LETSSOPT" >
-        <activity
-            android:name=".week1.SignUpActivity"
-            android:exported="false"
-            android:label="@string/title_activity_sign_up"
-            android:theme="@style/Theme.LETSSOPT" />
-        <activity
-            android:name=".week1.LoginActivity"
-            android:exported="false"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.LETSSOPT" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
