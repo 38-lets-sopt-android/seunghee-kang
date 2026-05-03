@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +51,7 @@ fun LibraryItem(
             fontWeight = FontWeight.Normal,
             fontFamily = FontFamily(Font(R.font.pretendard_regular)),
             textAlign = TextAlign.Left,
+            lineHeight = 16.sp,
             modifier = Modifier.size(width = 100.dp, height = 38.dp)
         )
 

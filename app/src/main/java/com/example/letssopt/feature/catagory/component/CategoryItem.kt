@@ -75,8 +75,10 @@ fun CategoryItem(
             fontWeight = FontWeight.Normal,
             fontFamily = FontFamily(Font(R.font.pretendard_regular)),
             textAlign = TextAlign.Left,
+            lineHeight = 16.sp,
             modifier = Modifier.size(width = 100.dp, height = 38.dp)
         )
+
     }
 }
 

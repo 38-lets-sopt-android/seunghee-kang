@@ -105,7 +105,7 @@ fun LibraryScreenDataPreview() {
             modifier = Modifier.padding(start = 16.dp)
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(45.dp))
 
         // 그리드
         LazyVerticalGrid(
