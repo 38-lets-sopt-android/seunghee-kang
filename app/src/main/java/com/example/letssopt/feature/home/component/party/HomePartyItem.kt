@@ -1,0 +1,110 @@
+package com.example.letssopt.feature.home.component.party
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.letssopt.R
+import com.example.letssopt.feature.home.model.PartyModel
+
+@Composable
+fun HomePartyItem(party: PartyModel) {
+    Box(
+        modifier = Modifier
+            .width(196.dp)
+            .height(185.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color(0xFF2A2A2A),
+                    shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                )
+        ) {
+            Image(
+                painter = painterResource(id = party.imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(139.dp)
+                    .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+            )
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    text = party.time,
+                    modifier = Modifier.padding(start = 8.dp, top = 6.dp, bottom = 6.dp),
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        color = Color(0xFFE8003C),
+                        fontFamily = FontFamily(Font(R.font.pretendard_regular)),
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+
+                Text(
+                    text = party.title,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 7.dp),
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 7.dp, end = 5.dp)
+                .size(35.dp)
+                .clip(CircleShape)
+                .background(Color.White),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_noti_black),
+                contentDescription = "noti",
+                modifier = Modifier.size(18.dp),
+                tint = Color.Black
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomePartyItemPreview() {
+    HomePartyItem(
+        party = PartyModel(
+            id = "1",
+            time = "오늘 21:13",
+            title = "# 왕과 사는 남자",
+            imageRes = R.drawable.img_party1
+        )
+    )
+}
