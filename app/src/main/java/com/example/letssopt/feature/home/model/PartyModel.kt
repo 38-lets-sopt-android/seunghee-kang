@@ -6,5 +6,5 @@ data class PartyModel(
     val id: String,
     val time: String,
     val title: String,
-    val imageRes: Int
+    @DrawableRes val imageRes: Int
 )

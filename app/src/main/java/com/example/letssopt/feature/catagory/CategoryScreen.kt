@@ -1,6 +1,7 @@
 package com.example.letssopt.feature.catagory
 
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,7 +28,7 @@ import com.example.letssopt.feature.catagory.component.CategoryItem
 
 data class MovieData(
     val title: String,
-    val imageRes: Int
+    @DrawableRes val imageRes: Int
 )
 
 @Composable
