@@ -30,11 +30,11 @@ import com.example.letssopt.core.component.WatchaLogo
 
 @Composable
 fun SignUpScreen(
+    onShowToast: (String) -> Unit,
     onSignUpSuccess: (String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = viewModel()
 ) {
-    val context = LocalContext.current
 
     val email by viewModel.email.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
@@ -85,11 +85,11 @@ fun SignUpScreen(
         Button(
             onClick = {
                 when {
-                    !viewModel.isEmailValid -> Toast.makeText(context, "❌ 이메일 형식이 올바르지 않습니다.", Toast.LENGTH_SHORT).show()
-                    !viewModel.isPasswordValid -> Toast.makeText(context, "❌ 비밀번호는 8~12자여야 합니다.", Toast.LENGTH_SHORT).show()
-                    !viewModel.isPasswordMatching -> Toast.makeText(context, "❌ 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show()
+                    !viewModel.isEmailValid -> onShowToast("❌ 이메일 형식이 올바르지 않습니다.")
+                    !viewModel.isPasswordValid -> onShowToast("❌ 비밀번호는 8~12자여야 합니다.")
+                    !viewModel.isPasswordMatching -> onShowToast("❌ 비밀번호가 일치하지 않습니다.")
                     else -> {
-                        Toast.makeText(context, "✅ 회원가입 성공!", Toast.LENGTH_SHORT).show()
+                        onShowToast("✅ 회원가입 성공!")
                         onSignUpSuccess(email, password)
                     }
                 }
