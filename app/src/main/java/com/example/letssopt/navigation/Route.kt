@@ -1,13 +1,17 @@
 package com.example.letssopt.navigation
-sealed class Route(val route: String) {
-    // 로그인 화면
-    data object Login : Route("login")
+import kotlinx.serialization.Serializable
 
-    // 회원가입 화면
-    data object SignUp : Route("signup")
+sealed interface Route {
 
-    // 메인(홈) 화면
-    data object Main : Route("main")
+    @Serializable
+    data object Login : Route
 
-    data object Library : Route("library")
+    @Serializable
+    data object SignUp : Route
+
+    @Serializable
+    data object Main : Route
+
+    @Serializable
+    data object Library : Route
 }
