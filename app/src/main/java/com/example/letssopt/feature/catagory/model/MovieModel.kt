@@ -1,7 +1,8 @@
 package com.example.letssopt.feature.category.model
 
-import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Immutable
 
+@Immutable
 data class MovieModel(
     val id: Int,
     val title: String,
