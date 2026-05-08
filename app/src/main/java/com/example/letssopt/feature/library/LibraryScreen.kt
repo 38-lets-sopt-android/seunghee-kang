@@ -29,11 +29,10 @@ import com.example.letssopt.core.data.database.MovieEntity
 @Composable
 fun LibraryScreen(viewModel: LibraryViewModel = viewModel()) {
     val context = LocalContext.current
-    val toastMessage by viewModel.toastMessage.collectAsStateWithLifecycle(initialValue = null)
-
-    LaunchedEffect(toastMessage) {
-        toastMessage?.let {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(Unit) { // 화면이 처음 켜질 때 한 번만 실행!
+        viewModel.toastMessage.collect { message ->
+            // 메시지가 올 때마다 즉시 토스트를 띄워요. 0_<
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
     }
 
