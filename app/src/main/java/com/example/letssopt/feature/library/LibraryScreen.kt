@@ -78,49 +78,6 @@ fun LibraryScreen(viewModel: LibraryViewModel = viewModel()) {
 
 @Preview(showBackground = true)
 @Composable
-fun LibraryScreenDataPreview() {
-    // 더미 데이터
-    val dummyLibraryList = listOf(
-        MovieEntity(id = 1, title = "이 사랑 통역 되나요?", imageRes = R.drawable.img_content1),
-        MovieEntity(id = 2, title = "이상한일5", imageRes = R.drawable.img_content2),
-        MovieEntity(id = 3, title = "하일매리", imageRes = R.drawable.img_content3),
-        MovieEntity(id = 4, title = "이 사랑 통역 되나요?", imageRes = R.drawable.img_content1),
-        MovieEntity(id = 5, title = "이상한일5", imageRes = R.drawable.img_content2),
-        MovieEntity(id = 6, title = "하일매리", imageRes = R.drawable.img_content3)
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF141414))
-    ) {
-        // 타이틀
-        Spacer(modifier = Modifier.height(70.dp))
-
-        Text(
-            text = "찜한 목록",
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(45.dp))
-
-        // 그리드
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(dummyLibraryList) { movie ->
-                LibraryItem(
-                    movie = movie,
-                    onDeleteClick = {}
-                )
-            }
-        }
-    }
+private fun LibraryScreenDataPreview() {
+    LibraryScreen()
 }

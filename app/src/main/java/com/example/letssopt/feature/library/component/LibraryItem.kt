@@ -25,11 +25,12 @@ import com.example.letssopt.core.data.database.MovieEntity
 @Composable
 fun LibraryItem(
     movie: MovieEntity,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(100.dp)
+        modifier = modifier.width(100.dp)
     ) {
         // 포스터
         Image(
