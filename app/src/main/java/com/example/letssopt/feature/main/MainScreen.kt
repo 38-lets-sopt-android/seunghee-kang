@@ -40,13 +40,13 @@ fun MainScreen() {
         startDestination = appState.startDestination // "login"
     ) {
         // 로그인
-        composable(Route.Login.route) {
+        composable<Route.Login> {
             val context = LocalContext.current
 
             LoginScreen(
                 onLoginSuccess = {
-                    appState.navController.navigate(Route.Main.route) {
-                        popUpTo(Route.Login.route) { inclusive = true }
+                    appState.navController.navigate(Route.Main) {
+                        popUpTo<Route.Login> { inclusive = true }
                     }
                 },
                 onSignUpClick = { appState.navigateToSignUp() },
@@ -58,7 +58,7 @@ fun MainScreen() {
         }
 
         // 회원가입
-        composable(Route.SignUp.route) {
+        composable<Route.SignUp> {
             val context = LocalContext.current
             SignUpScreen(
                 onShowToast = { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() },
@@ -67,7 +67,7 @@ fun MainScreen() {
         }
 
         // 메인 컨텐츠
-        composable(Route.Main.route) {
+        composable<Route.Main> {
             val mainViewModel: MainViewModel = viewModel()
             val selectedTab by mainViewModel.selectedTab.collectAsStateWithLifecycle()
 

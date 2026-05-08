@@ -1,15 +1,18 @@
 package com.example.letssopt.feature.signup
 
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.letssopt.core.common.util.UiState
+import com.example.letssopt.core.data.dto.request.SignUpRequest
+import com.example.letssopt.core.data.network.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class SignUpViewModel : ViewModel() {
-    // StateFlow로 변경
-    private val _email = MutableStateFlow("")
-    val email: StateFlow<String> = _email.asStateFlow()
+    private val _loginId = MutableStateFlow("")
+    val loginId: StateFlow<String> = _loginId.asStateFlow()
 
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
@@ -17,29 +20,91 @@ class SignUpViewModel : ViewModel() {
     private val _passwordConfirm = MutableStateFlow("")
     val passwordConfirm: StateFlow<String> = _passwordConfirm.asStateFlow()
 
-    // 값 변경 함수 수정 (.value 사용)
-    fun onEmailChanged(newEmail: String) {
-        _email.value = newEmail
+    private val _name = MutableStateFlow("")
+    val name: StateFlow<String> = _name.asStateFlow()
+
+    private val _email = MutableStateFlow("")
+    val email: StateFlow<String> = _email.asStateFlow()
+
+    private val _age = MutableStateFlow("")
+    val age: StateFlow<String> = _age.asStateFlow()
+
+    private val _part = MutableStateFlow("")
+    val part: StateFlow<String> = _part.asStateFlow()
+
+    private val _signUpState = MutableStateFlow<UiState<Int>>(UiState.Idle)
+    val signUpState: StateFlow<UiState<Int>> = _signUpState.asStateFlow()
+
+    fun onLoginIdChanged(id: String) {
+        _loginId.value = id
     }
 
-    fun onPasswordChanged(newPassword: String) {
-        _password.value = newPassword
+    fun onPasswordChanged(pw: String) {
+        _password.value = pw
     }
 
-    fun onPasswordConfirmChanged(newPasswordConfirm: String) {
-        _passwordConfirm.value = newPasswordConfirm
+    fun onPasswordConfirmChanged(pw: String) {
+        _passwordConfirm.value = pw
     }
 
-    // StateFlow의 현재 값을 참조
-    val isEmailValid: Boolean
-        get() = Patterns.EMAIL_ADDRESS.matcher(_email.value).matches()
+    fun onNameChanged(name: String) {
+        _name.value = name
+    }
 
-    val isPasswordValid: Boolean
-        get() = _password.value.length in 8..12
+    fun onEmailChanged(email: String) {
+        _email.value = email
+    }
 
-    val isPasswordMatching: Boolean
-        get() = _password.value == _passwordConfirm.value && _password.value.isNotEmpty()
+    fun onAgeChanged(age: String) {
+        _age.value = age
+    }
 
-    val isAllFieldsFilled: Boolean
-        get() = _email.value.isNotEmpty() && _password.value.isNotEmpty() && _passwordConfirm.value.isNotEmpty()
+    fun onPartChanged(part: String) {
+        _part.value = part
+    }
+
+    fun signUp() = viewModelScope.launch {
+        _signUpState.value = UiState.Loading
+
+        runCatching {
+            RetrofitClient.authService.signUp(
+                SignUpRequest(
+                    loginId = _loginId.value,
+                    password = _password.value,
+                    name = _name.value,
+                    email = _email.value,
+                    age = _age.value.toIntOrNull() ?: 0,
+                    part = _part.value
+                )
+            )
+        }.onSuccess { response ->
+            if (response.isSuccessful) {
+                _signUpState.value = UiState.Success(response.body()?.data ?: -1)
+            } else {
+                val errorMsg = response.errorBody()?.string() ?: "회원가입 실패"
+                _signUpState.value = UiState.Error(errorMsg)
+            }
+        }.onFailure { t ->
+            _signUpState.value = UiState.Error(t.message ?: "네트워크 오류")
+        }
+    }
+
+    fun isSignUpEnabled(): Boolean {
+        val isIdValid = _loginId.value.length in 4..20
+        val isPwValid = _password.value.length in 8..20
+        val isPwConfirmValid = _password.value == _passwordConfirm.value
+        val isNameValid = _name.value.length in 1..10
+        val isEmailValid = _email.value.contains("@") && _email.value.isNotBlank()
+        val ageInt = _age.value.toIntOrNull() ?: 0
+        val isAgeValid = ageInt in 1..150
+        val isPartValid = _part.value.isNotBlank()
+
+        return isIdValid &&
+                isPwValid &&
+                isPwConfirmValid &&
+                isNameValid &&
+                isEmailValid &&
+                isAgeValid &&
+                isPartValid
+    }
 }
