@@ -28,11 +28,12 @@ import com.example.letssopt.R
 fun CategoryItem(
     title: String,
     imageRes: Int,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(100.dp)
+        modifier = modifier.width(100.dp)
     ) {
         Box(
             modifier = Modifier.size(width = 100.dp, height = 150.dp)
@@ -84,7 +85,7 @@ fun CategoryItem(
 
 @Preview(showBackground = true)
 @Composable
-fun CategoryItemPreview() {
+private fun CategoryItemPreview() {
     Box(modifier = Modifier.padding(8.dp)) {
         CategoryItem(
             title = "이 사랑 통역 되나요?",
