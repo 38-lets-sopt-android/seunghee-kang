@@ -43,14 +43,7 @@ fun CategoryScreen(viewModel: CategoryViewModel = viewModel()) {
     }
 
     // 데이터 리스트
-    val movieList = listOf(
-        MovieData("이 사랑 통역 되나요", R.drawable.img_content1),
-        MovieData("이상한일5", R.drawable.img_content2),
-        MovieData("하일매리", R.drawable.img_content3),
-        MovieData("이 사랑 통역 되나요", R.drawable.img_content1),
-        MovieData("이상한일5", R.drawable.img_content2),
-        MovieData("하일매리", R.drawable.img_content3)
-    )
+    val movies = viewModel.movieList
 
     Column(
         modifier = Modifier
@@ -78,12 +71,11 @@ fun CategoryScreen(viewModel: CategoryViewModel = viewModel()) {
             verticalArrangement = Arrangement.spacedBy(20.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(movieList) { movie ->
+            items(movies) { movie ->
                 CategoryItem(
                     title = movie.title,
                     imageRes = movie.imageRes,
                     onSaveClick = {
-                        // ViewModel의 저장 로직 호출
                         viewModel.saveMovie(movie.title, movie.imageRes)
                     }
                 )
@@ -94,47 +86,6 @@ fun CategoryScreen(viewModel: CategoryViewModel = viewModel()) {
 
 @Preview(showBackground = true, backgroundColor = 0xFF141414)
 @Composable
-fun CategoryScreenPreview() {
-    // 더미 데이터
-    val dummyMovies = listOf(
-        MovieData("이 사랑 통역 되나요?", R.drawable.img_content1),
-        MovieData("이상한일5", R.drawable.img_content2),
-        MovieData("하일매리", R.drawable.img_content3),
-        MovieData("이 사랑 통역 되나요?", R.drawable.img_content1),
-        MovieData("이상한일5", R.drawable.img_content2),
-        MovieData("하일매리", R.drawable.img_content3)
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF141414))
-    ) {
-        Spacer(modifier = Modifier.height(70.dp))
-        Text(
-            text = "개별 구매",
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(45.dp))
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(dummyMovies) { movie ->
-                CategoryItem(
-                    title = movie.title,
-                    imageRes = movie.imageRes,
-                    onSaveClick = {}
-                )
-            }
-        }
-    }
+private fun CategoryScreenPreview() {
+    CategoryScreen()
 }
