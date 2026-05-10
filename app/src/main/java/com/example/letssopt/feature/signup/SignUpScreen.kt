@@ -3,13 +3,19 @@ package com.example.letssopt.feature.signup
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,11 +25,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letssopt.R
+import com.example.letssopt.core.common.util.UiState
 import com.example.letssopt.core.component.SignTextField
 import com.example.letssopt.core.component.SignTitle
 import com.example.letssopt.core.component.WatchaLogo
@@ -35,70 +43,60 @@ fun SignUpScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = viewModel()
 ) {
-
-    val email by viewModel.email.collectAsStateWithLifecycle()
+    val loginId by viewModel.loginId.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val passwordConfirm by viewModel.passwordConfirm.collectAsStateWithLifecycle()
+    val name by viewModel.name.collectAsStateWithLifecycle()
+    val email by viewModel.email.collectAsStateWithLifecycle()
+    val age by viewModel.age.collectAsStateWithLifecycle()
+    val part by viewModel.part.collectAsStateWithLifecycle()
+
+    val signUpState by viewModel.signUpState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(signUpState) {
+        when (signUpState) {
+            is UiState.Success -> {
+                onShowToast("✅ 회원가입 성공!")
+                onSignUpSuccess(loginId, password)
+            }
+            is UiState.Error -> {
+                onShowToast("❌ ${(signUpState as UiState.Error).message}")
+            }
+            else -> Unit
+        }
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF141414))
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(60.dp))
         WatchaLogo()
         Spacer(modifier = Modifier.height(26.dp))
         SignTitle(text = "회원가입", modifier = Modifier.align(Alignment.Start))
-
         Spacer(modifier = Modifier.height(36.dp))
 
-        SignTextField(
-            label = "이메일",
-            value = email,
-            onValueChange = { viewModel.onEmailChanged(it) },
-            placeholder = "이메일 주소를 입력하세요",
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-        )
+        SignTextField(label = "아이디", value = loginId, onValueChange = { viewModel.onLoginIdChanged(it) }, placeholder = "아이디를 입력하세요")
+        SignTextField(label = "비밀번호", value = password, onValueChange = { viewModel.onPasswordChanged(it) }, placeholder = "비밀번호를 입력하세요", visualTransformation = PasswordVisualTransformation())
+        SignTextField(label = "비밀번호 확인", value = passwordConfirm, onValueChange = { viewModel.onPasswordConfirmChanged(it) }, placeholder = "비밀번호를 다시 입력하세요", visualTransformation = PasswordVisualTransformation())
+        SignTextField(label = "이름", value = name, onValueChange = { viewModel.onNameChanged(it) }, placeholder = "이름을 입력하세요")
+        SignTextField(label = "이메일", value = email, onValueChange = { viewModel.onEmailChanged(it) }, placeholder = "이메일을 입력하세요")
+        SignTextField(label = "나이", value = age, onValueChange = { viewModel.onAgeChanged(it) }, placeholder = "나이를 입력하세요", keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+        SignTextField(label = "파트", value = part, onValueChange = { viewModel.onPartChanged(it) }, placeholder = "파트를 입력하세요 (iOS / 안드로이드 / 웹)")
 
-        SignTextField(
-            label = "비밀번호",
-            value = password,
-            onValueChange = { viewModel.onPasswordChanged(it) },
-            placeholder = "비밀번호를 입력하세요",
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-
-        SignTextField(
-            label = "비밀번호 확인",
-            value = passwordConfirm,
-            onValueChange = { viewModel.onPasswordConfirmChanged(it) },
-            placeholder = "비밀번호를 다시 입력하세요",
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(48.dp))
 
         Button(
-            onClick = {
-                when {
-                    !viewModel.isEmailValid -> onShowToast("❌ 이메일 형식이 올바르지 않습니다.")
-                    !viewModel.isPasswordValid -> onShowToast("❌ 비밀번호는 8~12자여야 합니다.")
-                    !viewModel.isPasswordMatching -> onShowToast("❌ 비밀번호가 일치하지 않습니다.")
-                    else -> {
-                        onShowToast("✅ 회원가입 성공!")
-                        onSignUpSuccess(email, password)
-                    }
-                }
-            },
+            onClick = { viewModel.signUp() },
             modifier = Modifier
                 .padding(bottom = 26.dp)
                 .fillMaxWidth()
                 .height(52.dp),
-            enabled = viewModel.isAllFieldsFilled,
+            enabled = viewModel.isSignUpEnabled(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFE8003C),
                 contentColor = Color.White,
@@ -108,10 +106,20 @@ fun SignUpScreen(
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                "회원가입",
+                text = "회원가입",
                 fontFamily = FontFamily(Font(R.font.pretendard_bold)),
-                fontWeight = FontWeight.Bold, fontSize = 16.sp
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
             )
         }
-    }
+        }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SignUpScreenPreview() {
+    SignUpScreen(
+        onShowToast = {},
+        onSignUpSuccess = { _, _ -> }
+    )
 }

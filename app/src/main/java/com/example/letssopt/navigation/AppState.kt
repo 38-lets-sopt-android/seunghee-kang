@@ -8,10 +8,14 @@ import androidx.navigation.compose.rememberNavController
 class AppState(
     val navController: NavHostController
 ) {
-    val startDestination: String = Route.Login.route
+    val startDestination: Route = Route.Login
 
     fun navigateToSignUp() {
-        navController.navigate(Route.SignUp.route)
+        navController.navigate(Route.SignUp)
+    }
+
+    fun navigateToUserProfile(userId: Long) {
+        navController.navigate(Route.UserProfile(userId))
     }
 }
 
@@ -21,3 +25,4 @@ fun rememberAppState(
 ) = remember(navController) {
     AppState(navController)
 }
+

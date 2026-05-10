@@ -20,12 +20,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.letssopt.R
 import com.example.letssopt.feature.library.LibraryScreen
 import com.example.letssopt.feature.catagory.CategoryScreen
 import com.example.letssopt.feature.home.HomeScreen
 import com.example.letssopt.feature.login.LoginScreen
 import com.example.letssopt.feature.signup.SignUpScreen
+import com.example.letssopt.feature.user.UserScreen
 import com.example.letssopt.navigation.Route
 import com.example.letssopt.navigation.rememberAppState
 
@@ -33,20 +35,24 @@ import com.example.letssopt.navigation.rememberAppState
 @Composable
 fun MainScreen() {
 
+    val mainViewModel: MainViewModel = viewModel()
+
     val appState = rememberAppState()
+    val LoginUserId by mainViewModel.userId.collectAsStateWithLifecycle()
 
     NavHost(
         navController = appState.navController,
         startDestination = appState.startDestination // "login"
     ) {
         // 로그인
-        composable(Route.Login.route) {
+        composable<Route.Login> {
             val context = LocalContext.current
 
             LoginScreen(
-                onLoginSuccess = {
-                    appState.navController.navigate(Route.Main.route) {
-                        popUpTo(Route.Login.route) { inclusive = true }
+                onLoginSuccess = {id ->
+                    mainViewModel.updateUserId(id)
+                    appState.navController.navigate(Route.Main) {
+                        popUpTo<Route.Login> { inclusive = true }
                     }
                 },
                 onSignUpClick = { appState.navigateToSignUp() },
@@ -58,7 +64,7 @@ fun MainScreen() {
         }
 
         // 회원가입
-        composable(Route.SignUp.route) {
+        composable<Route.SignUp> {
             val context = LocalContext.current
             SignUpScreen(
                 onShowToast = { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() },
@@ -67,13 +73,29 @@ fun MainScreen() {
         }
 
         // 메인 컨텐츠
-        composable(Route.Main.route) {
+        composable<Route.Main> {
             val mainViewModel: MainViewModel = viewModel()
             val selectedTab by mainViewModel.selectedTab.collectAsStateWithLifecycle()
 
             MainContent(
                 selectedTab = selectedTab,
-                onTabSelected = { mainViewModel.updateTab(it) }
+                onTabSelected = { mainViewModel.updateTab(it) },
+                userId = LoginUserId,
+                onProfileClick = { userId ->
+                    appState.navigateToUserProfile(userId)
+                }
+            )
+        }
+
+        // 사용자 프로필
+        composable<Route.UserProfile> { backStackEntry ->
+            val context = LocalContext.current
+            val userProfile = backStackEntry.toRoute<Route.UserProfile>()
+
+            UserScreen(
+                userId = userProfile.userId,
+                onShowToast = { message -> Toast.makeText(context, message, Toast.LENGTH_SHORT).show() },
+                onBackClick = { appState.navController.popBackStack() }
             )
         }
     }
@@ -83,6 +105,8 @@ fun MainScreen() {
 private fun MainContent(
     selectedTab: MainTab,
     onTabSelected: (MainTab) -> Unit,
+    userId: Long,
+    onProfileClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -133,7 +157,12 @@ private fun MainContent(
                 .background(Color(0xFF141414))
         ) {
             when (selectedTab) {
-                MainTab.HOME -> HomeScreen()
+               MainTab.HOME -> {
+                HomeScreen(
+                    userId = userId,
+                    onProfileClick = onProfileClick
+                )
+            }
                 MainTab.CATEGORY -> CategoryScreen() // 개별 구매 화면 연결
                 MainTab.LIBRARY -> LibraryScreen()     // 보관함 화면 연결
                 else -> Text(
@@ -151,6 +180,8 @@ private fun MainContent(
 fun MainScreenPreview() {
     MainContent(
         selectedTab = MainTab.HOME,
-        onTabSelected = {}
+        onTabSelected = {},
+        onProfileClick = {},
+        userId = 1L,
     )
 }

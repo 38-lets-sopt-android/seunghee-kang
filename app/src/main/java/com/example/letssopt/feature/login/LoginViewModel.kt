@@ -1,44 +1,59 @@
 package com.example.letssopt.feature.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.letssopt.core.common.util.UiState
+import com.example.letssopt.core.data.dto.request.SignInRequest
+import com.example.letssopt.core.data.network.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
-    private val _email = MutableStateFlow("")
-    val email: StateFlow<String> = _email.asStateFlow()
+    private val _loginId = MutableStateFlow("")
+    val loginId: StateFlow<String> = _loginId.asStateFlow()
 
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
 
-    // LoginActivity에 있던 registeredEmail, registeredPw
-    private val _registeredEmail = MutableStateFlow("")
-    val registeredEmail: StateFlow<String> = _registeredEmail.asStateFlow()
-
-    private val _registeredPw = MutableStateFlow("")
-    val registeredPw = _registeredPw.asStateFlow()
-
-    // 입력값 변경 시 호출
-    fun onEmailChanged(newEmail: String) {
-        _email.value = newEmail
+    private val _loginState = MutableStateFlow<UiState<Long>>(UiState.Idle)
+    val loginState: StateFlow<UiState<Long>> = _loginState.asStateFlow()
+    fun onLoginIdChanged(newId: String) {
+        _loginId.value = newId
     }
 
     fun onPasswordChanged(newPw: String) {
         _password.value = newPw
     }
 
-    // 회원가입 완료 후 데이터를 받아오는 함수
-    fun setRegisteredInfo(email: String, pw: String) {
-        _registeredEmail.value = email
-        _registeredPw.value = pw
-        // 정보가 들어오면 입력란에 자동으로 채워주기
-        onEmailChanged(email)
-        onPasswordChanged(pw)
+    fun login() = viewModelScope.launch {
+        _loginState.value = UiState.Loading
+
+        runCatching {
+            RetrofitClient.authService.signIn(
+                SignInRequest(
+                    loginId = _loginId.value,
+                    password = _password.value
+                )
+            )
+        }.onSuccess { response ->
+            if (response.isSuccessful) {
+                val userId = response.body()?.data?.userId ?: -1L
+                _loginState.value = UiState.Success(userId)
+            } else {
+                val errorMsg = response.body()?.message ?: "로그인 실패"
+                _loginState.value = UiState.Error(errorMsg)
+            }
+        }.onFailure { t ->
+            _loginState.value = UiState.Error(t.message ?: "네트워크 오류")
+        }
     }
 
-    // 버튼 활성화 여부
-    fun isLoginEnabled(email: String, pw: String): Boolean {
-        return email.isNotEmpty() && pw.isNotEmpty()
+    fun isLoginEnabled(): Boolean {
+        val isIdValid = _loginId.value.length in 4..20
+        val isPwValid = _password.value.length in 8..20
+
+        return isIdValid && isPwValid
     }
 }

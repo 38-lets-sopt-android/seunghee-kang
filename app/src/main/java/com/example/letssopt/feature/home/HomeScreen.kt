@@ -31,6 +31,8 @@ import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun HomeScreen(
+    userId: Long,
+    onProfileClick: (Long) -> Unit,
     homeViewModel: HomeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -38,6 +40,8 @@ fun HomeScreen(
 
     HomeContent(
         uiState = uiState,
+        userId = userId,
+        onProfileClick = onProfileClick,
         modifier = modifier
     )
 }
@@ -45,6 +49,8 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: HomeUiState,
+    userId: Long,
+    onProfileClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -52,7 +58,12 @@ private fun HomeContent(
             .fillMaxSize()
             .background(Color(0xFF141414))
     ) {
-        item { HomeTopBar() }
+        item {
+            HomeTopBar(
+                userId = userId,
+                onProfileClick = onProfileClick
+            )
+        }
 
         // 배너 섹션
         item {
@@ -136,6 +147,8 @@ fun HomeScreenPreview() {
         uiState = HomeUiState(
             bannerImages = persistentListOf(R.drawable.img_banner1, R.drawable.img_banner2),
             contentImages = persistentListOf(R.drawable.img_content1, R.drawable.img_content2)
-        )
+        ),
+        userId = 1L,
+        onProfileClick = {}
     )
 }
