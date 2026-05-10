@@ -43,7 +43,6 @@ fun SignUpScreen(
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = viewModel()
 ) {
-    // 변수명들을 뷰모델의 서버 통신용 변수와 매칭!
     val loginId by viewModel.loginId.collectAsStateWithLifecycle()
     val password by viewModel.password.collectAsStateWithLifecycle()
     val passwordConfirm by viewModel.passwordConfirm.collectAsStateWithLifecycle()
@@ -54,7 +53,6 @@ fun SignUpScreen(
 
     val signUpState by viewModel.signUpState.collectAsStateWithLifecycle()
 
-    // [추가] 결과 리액션 ✨
     LaunchedEffect(signUpState) {
         when (signUpState) {
             is UiState.Success -> {
@@ -76,14 +74,12 @@ fun SignUpScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // 원본 디자인 레이아웃 유지!
         Spacer(modifier = Modifier.height(60.dp))
         WatchaLogo()
         Spacer(modifier = Modifier.height(26.dp))
         SignTitle(text = "회원가입", modifier = Modifier.align(Alignment.Start))
         Spacer(modifier = Modifier.height(36.dp))
 
-        // 각 필드들을 뷰모델의 상태와 함수에 쏙쏙!
         SignTextField(label = "아이디", value = loginId, onValueChange = { viewModel.onLoginIdChanged(it) }, placeholder = "아이디를 입력하세요")
         SignTextField(label = "비밀번호", value = password, onValueChange = { viewModel.onPasswordChanged(it) }, placeholder = "비밀번호를 입력하세요", visualTransformation = PasswordVisualTransformation())
         SignTextField(label = "비밀번호 확인", value = passwordConfirm, onValueChange = { viewModel.onPasswordConfirmChanged(it) }, placeholder = "비밀번호를 다시 입력하세요", visualTransformation = PasswordVisualTransformation())
@@ -95,12 +91,11 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(48.dp))
 
         Button(
-            onClick = { viewModel.signUp() }, // 로직은 서버 호출로! 🔥
+            onClick = { viewModel.signUp() },
             modifier = Modifier
                 .padding(bottom = 26.dp)
                 .fillMaxWidth()
                 .height(52.dp),
-            // 모든 필드가 채워졌을 때만 활성화 (뷰모델 로직 활용)
             enabled = viewModel.isSignUpEnabled(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFE8003C),
@@ -111,7 +106,7 @@ fun SignUpScreen(
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                text = "회원가입", // 승희님 요청대로 "회원가입" 고정! ✨
+                text = "회원가입",
                 fontFamily = FontFamily(Font(R.font.pretendard_bold)),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
@@ -123,7 +118,6 @@ fun SignUpScreen(
 @Preview(showBackground = true)
 @Composable
 private fun SignUpScreenPreview() {
-    // 테마가 있다면 테마로 감싸주세요! (예: LETSSOPTTheme)
     SignUpScreen(
         onShowToast = {},
         onSignUpSuccess = { _, _ -> }

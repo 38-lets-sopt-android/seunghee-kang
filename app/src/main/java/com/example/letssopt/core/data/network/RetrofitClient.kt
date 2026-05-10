@@ -15,8 +15,6 @@ object RetrofitClient {
         ignoreUnknownKeys = true
         coerceInputValues = true
     }
-
-    // 통신 로그를 찍어주는 인터셉터 (디버깅 꿀템 0_<)
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
@@ -31,6 +29,7 @@ object RetrofitClient {
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
 
-    // 우리가 만든 AuthService 인터페이스를 구현체로 만들어줌!
     val authService: AuthService = instance.create(AuthService::class.java)
+
+    val userService: UserService = instance.create(UserService::class.java)
 }

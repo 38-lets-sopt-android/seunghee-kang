@@ -17,7 +17,6 @@ class LoginViewModel : ViewModel() {
     private val _password = MutableStateFlow("")
     val password: StateFlow<String> = _password.asStateFlow()
 
-    // [체크] SignInResponse의 userId가 Int이므로 <Int> 유지가 정석입니다! ✨
     private val _loginState = MutableStateFlow<UiState<Long>>(UiState.Idle)
     val loginState: StateFlow<UiState<Long>> = _loginState.asStateFlow()
     fun onLoginIdChanged(newId: String) {
@@ -40,12 +39,10 @@ class LoginViewModel : ViewModel() {
             )
         }.onSuccess { response ->
             if (response.isSuccessful) {
-                // [수정] response.body()?.data는 LoginData 객체이므로 그 안의 userId를 꺼냅니다!
                 val userId = response.body()?.data?.userId ?: -1L
                 _loginState.value = UiState.Success(userId)
             } else {
-                // 실습 포인트: 서버가 주는 에러 메시지 그대로 활용
-                val errorMsg = response.errorBody()?.string() ?: "로그인 실패"
+                val errorMsg = response.body()?.message ?: "로그인 실패"
                 _loginState.value = UiState.Error(errorMsg)
             }
         }.onFailure { t ->
@@ -53,7 +50,6 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    // [명세 반영] Swagger에 적힌 아이디(4~20), 비번(8~20) 조건을 정확히 반영했습니다!
     fun isLoginEnabled(): Boolean {
         val isIdValid = _loginId.value.length in 4..20
         val isPwValid = _password.value.length in 8..20

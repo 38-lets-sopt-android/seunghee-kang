@@ -13,6 +13,10 @@ class AppState(
     fun navigateToSignUp() {
         navController.navigate(Route.SignUp)
     }
+
+    fun navigateToUserProfile(userId: Long) {
+        navController.navigate(Route.UserProfile(userId))
+    }
 }
 
 @Composable
@@ -21,3 +25,4 @@ fun rememberAppState(
 ) = remember(navController) {
     AppState(navController)
 }
+

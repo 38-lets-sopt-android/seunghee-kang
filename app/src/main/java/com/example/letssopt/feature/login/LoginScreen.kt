@@ -34,7 +34,7 @@ import com.example.letssopt.feature.login.LoginViewModel
 @Composable
 fun LoginScreen(
     onSignUpClick: () -> Unit,
-    onLoginSuccess: () -> Unit,
+    onLoginSuccess: (Long) -> Unit,
     onShowToast: (String) -> Unit,
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = viewModel(),
@@ -43,12 +43,12 @@ fun LoginScreen(
     val password by loginViewModel.password.collectAsStateWithLifecycle()
     val loginState by loginViewModel.loginState.collectAsStateWithLifecycle()
 
-    // 서버 응답 상태 관찰 (UI에는 안 보임!)
     LaunchedEffect(loginState) {
         when (loginState) {
             is UiState.Success -> {
                 onShowToast("✅ 로그인 성공!")
-                onLoginSuccess()
+                val userId = (loginState as UiState.Success<Long>).data
+                onLoginSuccess(userId)
             }
             is UiState.Error -> {
                 onShowToast("❌ ${(loginState as UiState.Error).message}")
@@ -64,7 +64,7 @@ fun LoginScreen(
             .padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.height(60.dp)) // 상단 여백 유지
+        Spacer(modifier = Modifier.height(60.dp))
         WatchaLogo()
         Spacer(modifier = Modifier.height(26.dp))
         SignTitle(text = "아이디로 로그인", modifier = Modifier.align(Alignment.Start))
@@ -86,7 +86,7 @@ fun LoginScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
 
-        Spacer(modifier = Modifier.weight(1f)) // [원본 복구] 아래로 밀어내기
+        Spacer(modifier = Modifier.weight(1f))
 
         Text(
             text = "아직 계정이 없으신가요? 회원가입",
@@ -95,17 +95,16 @@ fun LoginScreen(
             modifier = Modifier.clickable { onSignUpClick() }
         )
 
-        Spacer(modifier = Modifier.height(20.dp)) // [원본 복구] 텍스트-버튼 사이 간격
-
+        Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = { loginViewModel.login() }, // 로직만 서버로!
+            onClick = { loginViewModel.login() },
             modifier = Modifier
                 .padding(bottom = 26.dp)
                 .fillMaxWidth()
                 .height(52.dp),
-            enabled = loginViewModel.isLoginEnabled(), // 원본 조건 유지
+            enabled = loginViewModel.isLoginEnabled(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFE8003C), // 왓챠 핑크
+                containerColor = Color(0xFFE8003C),
                 contentColor = Color.White,
                 disabledContainerColor = Color(0xFF333333),
                 disabledContentColor = Color(0xFF666666)
@@ -113,7 +112,7 @@ fun LoginScreen(
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                text = "로그인", // [원본 복구] 텍스트 고정
+                text = "로그인",
                 fontFamily = FontFamily(Font(R.font.pretendard_bold)),
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp

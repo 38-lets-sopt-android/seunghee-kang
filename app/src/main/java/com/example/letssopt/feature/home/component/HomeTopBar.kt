@@ -1,5 +1,6 @@
 package com.example.letssopt.feature.home.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -13,6 +14,8 @@ import com.example.letssopt.R
 
 @Composable
 fun HomeTopBar(
+    userId: Long,
+    onProfileClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -41,7 +44,9 @@ fun HomeTopBar(
             painter = painterResource(id = R.drawable.ic_profile),
             contentDescription = null,
             tint = Color.White,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier
+                        .size(24.dp)
+                        .clickable { onProfileClick(userId) }
         )
     }
 }
@@ -49,5 +54,8 @@ fun HomeTopBar(
 @Preview(showBackground = true)
 @Composable
 fun HomeTopBarPreview() {
-    HomeTopBar()
+    HomeTopBar(
+        userId = 1L,
+        onProfileClick = {id -> }
+    )
 }

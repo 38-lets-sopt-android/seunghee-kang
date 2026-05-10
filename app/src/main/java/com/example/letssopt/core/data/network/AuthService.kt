@@ -12,6 +12,5 @@ interface AuthService {
     suspend fun signUp(@Body request: SignUpRequest): Response<SignUpResponse>
 
     @POST("api/v1/auth/signin")
-    // [수정] SignUpResponse 대신 전용 모델인 SignInResponse 사용 ✨
     suspend fun signIn(@Body request: SignInRequest): Response<SignInResponse>
 }

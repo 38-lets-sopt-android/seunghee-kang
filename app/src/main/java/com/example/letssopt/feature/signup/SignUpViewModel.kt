@@ -81,7 +81,7 @@ class SignUpViewModel : ViewModel() {
             if (response.isSuccessful) {
                 _signUpState.value = UiState.Success(response.body()?.data ?: -1)
             } else {
-                val errorMsg = response.errorBody()?.string() ?: "회원가입 실패"
+                val errorMsg = response.body()?.message ?: "회원가입 실패"
                 _signUpState.value = UiState.Error(errorMsg)
             }
         }.onFailure { t ->
